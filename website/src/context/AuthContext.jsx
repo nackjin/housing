@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+﻿import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await fetch('http://localhost:3002/api/users/login', {
+            const response = await fetch('https://housing-fcu7.onrender.com/api/users/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateUser = async (userId, updateData) => {
         try {
-            const response = await fetch(`http://localhost:3002/api/users/${userId}`, {
+            const response = await fetch(`https://housing-fcu7.onrender.com/api/users/${userId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updateData)

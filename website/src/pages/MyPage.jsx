@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { User, Wallet, FileText, ChevronRight, Settings, Users } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ const MyPage = () => {
     useEffect(() => {
         const fetchDonations = async () => {
             try {
-                const response = await fetch('http://localhost:3002/api/donations');
+                const response = await fetch('https://housing-fcu7.onrender.com/api/donations');
                 if (response.ok) {
                     const allDonations = await response.json();
                     if (user && user.role === 'admin') {

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+﻿import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const PostContext = createContext();
 
@@ -107,7 +107,7 @@ export const PostProvider = ({ children }) => {
     // Initialize state from localStorage or use default
     // We check if the saved data is valid and has length. If not, we fallback to defaultPosts.
     const [posts, setPosts] = useState([]);
-    const API_BASE_URL = 'http://localhost:3002/api/posts';
+    const API_BASE_URL = 'https://housing-fcu7.onrender.com/api/posts';
 
     useEffect(() => {
         const fetchPosts = async () => {
