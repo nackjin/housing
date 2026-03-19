@@ -108,6 +108,24 @@ export const PostProvider = ({ children }) => {
     // We check if the saved data is valid and has length. If not, we fallback to defaultPosts.
     const [posts, setPosts] = useState([]);
     const API_BASE_URL = 'https://housing-fcu7.onrender.com/api/posts';
+    const BACKEND_URL = 'https://housing-fcu7.onrender.com';
+
+    // Helper to fix image URLs from localhost to production
+    const fixPostUrls = (post) => {
+        const fixUrl = (url) => {
+            if (!url) return url;
+            if (url.startsWith('/uploads/')) return BACKEND_URL + url;
+            if (url.includes('localhost:')) {
+                return url.replace(/http:\/\/localhost:\d+/, BACKEND_URL);
+            }
+            return url;
+        };
+        return {
+            ...post,
+            image: fixUrl(post.image),
+            images: post.images && Array.isArray(post.images) ? post.images.map(fixUrl) : []
+        };
+    };
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -115,7 +133,7 @@ export const PostProvider = ({ children }) => {
                 const response = await fetch(API_BASE_URL);
                 if (response.ok) {
                     const data = await response.json();
-                    setPosts(data);
+                    setPosts(data.map(fixPostUrls));
                 } else {
                     console.error('Failed to fetch posts from API');
                     setPosts(defaultPosts); // Fallback
@@ -153,7 +171,7 @@ export const PostProvider = ({ children }) => {
             if (response.ok) {
                 const createdPost = await response.json();
                 console.log('Successfully added to local server:', createdPost);
-                setPosts((prevPosts) => [createdPost, ...prevPosts]);
+                setPosts((prevPosts) => [fixPostUrls(createdPost), ...prevPosts]);
             } else {
                 console.error('Failed to add post via API');
             }
@@ -200,7 +218,7 @@ export const PostProvider = ({ children }) => {
             if (response.ok) {
                 const result = await response.json();
                 setPosts(prevPosts =>
-                    prevPosts.map(p => p.id === id ? result : p)
+                    prevPosts.map(p => p.id === id ? fixPostUrls(result) : p)
                 );
             } else {
                 console.error('Failed to update post via API');
