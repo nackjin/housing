@@ -85,8 +85,7 @@ const HomePage = () => {
                         {/* Card 1 */}
                         <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                             <div className="h-48 bg-gray-200 relative overflow-hidden">
-                                {/* Image Placeholder */}
-                                <div className="absolute inset-0 bg-gray-300 group-hover:scale-105 transition-transform duration-500"></div>
+                                <img src="/images/activity1.png" alt="대한민국 주거복지문화대상" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">주요사업</div>
                             </div>
                             <div className="p-8">
@@ -103,7 +102,7 @@ const HomePage = () => {
                         {/* Card 2 */}
                         <div className="group bg-cardBg rounded-2xl overflow-hidden shadow-sm hover:bg-cardHover hover:shadow-xl transition-all duration-300">
                             <div className="h-48 bg-gray-200 relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gray-300 group-hover:scale-105 transition-transform duration-500"></div>
+                                <img src="/images/activity2.png" alt="장애인 인식개선 교육" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 <div className="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">교육지원</div>
                             </div>
                             <div className="p-8">
@@ -124,7 +123,7 @@ const HomePage = () => {
                         {/* Card 3 */}
                         <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                             <div className="h-48 bg-gray-200 relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gray-300 group-hover:scale-105 transition-transform duration-500"></div>
+                                <img src="/images/activity3.png" alt="주거환경 개선 사례" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 <div className="absolute top-4 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">우수사례</div>
                             </div>
                             <div className="p-8">
