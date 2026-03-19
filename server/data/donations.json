@@ -1,0 +1,15 @@
+[
+  {
+    "userId": 2,
+    "name": "성낙진",
+    "phone": "010-4214-8899",
+    "email": "nackjin@daum.net",
+    "type": "정기후원",
+    "amount": 30000,
+    "message": "",
+    "method": "계좌이체",
+    "id": 1,
+    "date": "2026-02-26",
+    "status": "결제대기"
+  }
+]

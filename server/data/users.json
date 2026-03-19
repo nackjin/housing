@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "password": "admin",
+    "name": "최고관리자",
+    "email": "good@good1004.kr",
+    "phone": "01042148899",
+    "address": "서울 관악구",
+    "affiliation": "주거복지문화운동본부",
+    "role": "admin",
+    "createdAt": "2026-02-26T06:45:37.045Z"
+  },
+  {
+    "username": "nackjin",
+    "password": "nack0588",
+    "passwordConfirm": "nack0588",
+    "name": "성낙진",
+    "email": "nackjin@daum.net",
+    "phone": "010-4214-8899",
+    "address": "서울특별시 서초구",
+    "affiliation": "한국집합건물진흥원",
+    "id": 2,
+    "role": "user",
+    "createdAt": "2026-02-26T06:49:49.258Z"
+  }
+]
