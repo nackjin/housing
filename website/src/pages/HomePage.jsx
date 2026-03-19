@@ -39,34 +39,7 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Stats / Impact Section */}
-            <section className="py-20 bg-white">
-                <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                        <div className="p-8 rounded-2xl bg-gray-50 hover:shadow-lg transition-all">
-                            <div className="w-16 h-16 mx-auto bg-blue-100 text-primary rounded-full flex items-center justify-center mb-6">
-                                <Home size={32} />
-                            </div>
-                            <h3 className="text-4xl font-bold text-gray-900 mb-2">1,200+</h3>
-                            <p className="text-gray-600">주거환경 개선 가구</p>
-                        </div>
-                        <div className="p-8 rounded-2xl bg-gray-50 hover:shadow-lg transition-all">
-                            <div className="w-16 h-16 mx-auto bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
-                                <Users size={32} />
-                            </div>
-                            <h3 className="text-4xl font-bold text-gray-900 mb-2">350+</h3>
-                            <p className="text-gray-600">자원봉사자 참여</p>
-                        </div>
-                        <div className="p-8 rounded-2xl bg-gray-50 hover:shadow-lg transition-all">
-                            <div className="w-16 h-16 mx-auto bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mb-6">
-                                <Award size={32} />
-                            </div>
-                            <h3 className="text-4xl font-bold text-gray-900 mb-2">50+</h3>
-                            <p className="text-gray-600">협력 기관</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+
 
             {/* Focus Areas / Quick Links */}
             <section className="py-24 bg-gray-50">
@@ -140,76 +113,90 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* News Section */}
+            {/* News & Gallery Section */}
             <section className="py-24">
                 <div className="container mx-auto px-4">
-                    <div className="flex flex-col md:flex-row gap-16">
-                        <div className="flex-1">
-                            <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
-                                <h2 className="text-2xl font-bold text-gray-900">공지사항 / 뉴스</h2>
-                                <Link to="/news/notice" className="text-gray-500 hover:text-primary text-sm flex items-center gap-1">더보기 <ChevronRight size={16} /></Link>
+                    <div className="flex justify-between items-end mb-12">
+                        <div>
+                            <span className="text-primary font-bold tracking-wider uppercase text-sm">News & Community</span>
+                            <h2 className="text-3xl font-bold text-gray-900 mt-2">소식 및 갤러리</h2>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Column 1: Notice / News */}
+                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 h-full flex flex-col transition-all hover:shadow-md">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-2xl font-bold text-gray-900">공지사항 / 뉴스</h3>
+                                <Link to="/news/notice" className="text-gray-500 hover:text-primary text-sm flex items-center">더보기 <ChevronRight size={16} /></Link>
                             </div>
-                            <ul className="space-y-6">
-                                {posts.filter(p => p.category === 'notice').slice(0, 3).map((item) => (
-                                    <li key={item.id} className="group">
-                                        <Link to={`/news/notice/${item.id}`} className="flex gap-6 items-start">
-                                            <div className="flex-shrink-0 w-20 text-center pt-1">
-                                                <span className="block text-2xl font-bold text-gray-300 group-hover:text-primary transition-colors">
-                                                    {new Date(item.date).getDate().toString().padStart(2, '0')}
-                                                </span>
-                                                <span className="block text-xs text-gray-400 uppercase">
-                                                    {new Date(item.date).toLocaleString('en-US', { month: 'short' })}. {new Date(item.date).getFullYear()}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <h4 className="text-lg font-medium text-gray-800 group-hover:text-primary transition-colors mb-2 line-clamp-1">
-                                                    {item.title}
-                                                </h4>
-                                                <p className="text-gray-500 text-sm line-clamp-2">
-                                                    {item.content}
-                                                </p>
-                                            </div>
+                            <ul className="space-y-4 flex-1">
+                                {posts.filter(p => p.category === 'notice').slice(0, 5).map((item) => (
+                                    <li key={item.id} className="group border-b border-gray-50 last:border-0 pb-4 last:pb-0">
+                                        <Link to={`/news/notice/${item.id}`} className="block">
+                                            <h4 className="font-medium text-gray-800 group-hover:text-primary transition-colors mb-2 line-clamp-1">
+                                                {item.title}
+                                            </h4>
+                                            <span className="text-xs text-gray-400">
+                                                {new Date(item.date).toLocaleDateString('ko-KR')}
+                                            </span>
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
                         </div>
 
-                        <div className="w-full md:w-1/3">
-                            <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
-                                <h2 className="text-2xl font-bold text-gray-900">영상 갤러리</h2>
-                                <Link to="/news/video" className="text-gray-500 hover:text-primary text-sm flex items-center gap-1">더보기 <ChevronRight size={16} /></Link>
+                        {/* Column 2: Photo Gallery */}
+                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 h-full flex flex-col transition-all hover:shadow-md">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-2xl font-bold text-gray-900">사진 갤러리</h3>
+                                <Link to="/news/gallery" className="text-gray-500 hover:text-primary text-sm flex items-center">더보기 <ChevronRight size={16} /></Link>
                             </div>
-                            {(() => {
-                                const latestVideo = posts.find(p => p.category === 'video');
-                                if (!latestVideo) return null;
-
-                                // Extract youtube ID to show thumbnail
-                                let videoId = '';
-                                if (latestVideo.videoUrl) {
-                                    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-                                    const match = latestVideo.videoUrl.match(regExp);
-                                    videoId = (match && match[2].length === 11) ? match[2] : null;
-                                }
-
-                                return (
-                                    <Link to={`/news/video/${latestVideo.id}`} className="block group rounded-xl overflow-hidden relative aspect-video bg-gray-900">
-                                        {videoId ? (
-                                            <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt={latestVideo.title} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
-                                        ) : (
-                                            <div className="absolute inset-0 bg-gray-800 opacity-60 group-hover:opacity-40 transition-opacity"></div>
-                                        )}
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                                                <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1"></div>
-                                            </div>
-                                        </div>
-                                        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                                            <span className="text-white font-bold text-lg line-clamp-2">{latestVideo.title}</span>
-                                        </div>
+                            <div className="grid grid-cols-2 gap-4 flex-1">
+                                {posts.filter(p => p.category === 'gallery').slice(0, 4).map((item) => (
+                                    <Link key={item.id} to={`/news/gallery/${item.id}`} className="group block relative aspect-square rounded-xl overflow-hidden bg-gray-100">
+                                        <img src={item.image || '/images/placeholder.jpg'} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
                                     </Link>
-                                );
-                            })()}
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Column 3: Video Gallery */}
+                        <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 h-full flex flex-col transition-all hover:shadow-md">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-2xl font-bold text-gray-900">영상 갤러리</h3>
+                                <Link to="/news/video" className="text-gray-500 hover:text-primary text-sm flex items-center">더보기 <ChevronRight size={16} /></Link>
+                            </div>
+                            <div className="flex flex-col gap-4 flex-1">
+                                {posts.filter(p => p.category === 'video').slice(0, 2).map((item) => {
+                                    let videoId = '';
+                                    if (item.videoUrl) {
+                                        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                                        const match = item.videoUrl.match(regExp);
+                                        videoId = (match && match[2].length === 11) ? match[2] : null;
+                                    }
+                                    return (
+                                        <Link key={item.id} to={`/news/video/${item.id}`} className="group block relative aspect-video rounded-xl overflow-hidden bg-gray-900">
+                                            {videoId ? (
+                                                <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt={item.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                            ) : item.image ? (
+                                                <img src={item.image} alt={item.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center bg-gray-800 text-gray-500 text-sm">No Video</div>
+                                            )}
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                                                    <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-white border-b-[6px] border-b-transparent ml-1"></div>
+                                                </div>
+                                            </div>
+                                            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                                                <p className="text-white text-sm font-medium line-clamp-1">{item.title}</p>
+                                            </div>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>
