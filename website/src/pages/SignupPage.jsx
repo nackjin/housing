@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Lock, Mail, Phone, UserCheck, MapPin, Briefcase } from 'lucide-react';
 
@@ -37,7 +37,7 @@ const SignupPage = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3002/api/users/register', {
+            const response = await fetch('https://housing-fcu7.onrender.com/api/users/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

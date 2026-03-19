@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ChevronLeft, Users, Mail, Phone, MapPin, Briefcase, Clock, Shield } from 'lucide-react';
@@ -18,7 +18,7 @@ const AdminMembers = () => {
 
         const fetchMembers = async () => {
             try {
-                const response = await fetch('http://localhost:3002/api/users');
+                const response = await fetch('https://housing-fcu7.onrender.com/api/users');
                 if (response.ok) {
                     const data = await response.json();
                     setMembers(data);
