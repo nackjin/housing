@@ -85,7 +85,7 @@ const HomePage = () => {
                         {/* Card 1 */}
                         <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                             <div className="h-48 bg-gray-200 relative overflow-hidden">
-                                <img src="/images/activity1.png" alt="대한민국 주거복지문화대상" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <img src="/images/activity1.jpg" alt="대한민국 주거복지문화대상" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">주요사업</div>
                             </div>
                             <div className="p-8">
