@@ -18,6 +18,7 @@ const AdminPost = () => {
         author: '관리자',
         content: '',
         image: '',
+        existingImages: [],
         imageFiles: [],
         videoUrl: ''
     });
@@ -31,7 +32,8 @@ const AdminPost = () => {
                     title: postToEdit.title,
                     author: postToEdit.author,
                     content: postToEdit.content,
-                    image: postToEdit.image || '',
+                    image: '',
+                    existingImages: postToEdit.images || (postToEdit.image ? [postToEdit.image] : []),
                     imageFiles: [],
                     videoUrl: postToEdit.videoUrl || ''
                 });
@@ -54,6 +56,13 @@ const AdminPost = () => {
         }
     };
 
+    const handleDeleteExistingImage = (indexToRemove) => {
+        setFormData(prev => ({
+            ...prev,
+            existingImages: prev.existingImages.filter((_, i) => i !== indexToRemove)
+        }));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -74,13 +83,17 @@ const AdminPost = () => {
                     formData.imageFiles.forEach(file => {
                         submitData.append('images', file);
                     });
-                } else if (key !== 'image') { // ignore old image string if uploading new files
+                } else if (key === 'existingImages') {
+                    submitData.append('existingImages', JSON.stringify(formData.existingImages));
+                } else if (key !== 'image') { // ignore old image string
                     submitData.append(key, formData[key]);
                 }
             });
         } else {
             submitData = { ...formData };
+            submitData.existingImages = JSON.stringify(formData.existingImages);
             delete submitData.imageFiles;
+            delete submitData.image;
         }
 
         // Add post
@@ -170,8 +183,23 @@ const AdminPost = () => {
                                     onChange={handleChange}
                                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                                 />
-                                {formData.image && formData.imageFiles.length === 0 && editId && (
-                                    <p className="mt-2 text-sm text-gray-500">현재 이미지: <a href={formData.image} target="_blank" rel="noreferrer" className="text-primary hover:underline">보기</a></p>
+                                {formData.existingImages && formData.existingImages.length > 0 && editId && (
+                                    <div className="mt-3 flex flex-wrap gap-2">
+                                        <p className="w-full text-sm text-gray-500 mb-1">현재 포함된 이미지 (삭제하려면 X 버튼 클릭):</p>
+                                        {formData.existingImages.map((img, idx) => (
+                                            <div key={idx} className="relative group border rounded-md overflow-hidden bg-gray-100">
+                                                <img src={img} alt={`기존 업로드 사진 ${idx}`} className="w-20 h-20 object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDeleteExistingImage(idx)}
+                                                    className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs hover:bg-red-600 shadow-md transition-colors"
+                                                    title="이미지 삭제"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
                                 )}
                             </div>
                             <div>

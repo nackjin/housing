@@ -251,10 +251,22 @@ app.put('/api/posts/:id', upload.array('images', 10), (req, res) => {
 
     let imageUrls = posts[index].images || (posts[index].image ? [posts[index].image] : []);
 
-    // If the frontend explicitly sends empty or replacement images, we should technically handle that. 
-    // For simplicity, if new files are uploaded, we append or replace. Let's replace for now.
+    if (updatedData.existingImages !== undefined) {
+        try {
+            const parsed = JSON.parse(updatedData.existingImages);
+            imageUrls = Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            imageUrls = [];
+        }
+    }
+
     if (req.files && req.files.length > 0) {
-        imageUrls = req.files.map(file => `http://localhost:${PORT}/uploads/${file.filename}`);
+        const newUrls = req.files.map(file => `/uploads/${file.filename}`);
+        if (updatedData.existingImages !== undefined) {
+            imageUrls = [...imageUrls, ...newUrls];
+        } else {
+            imageUrls = newUrls;
+        }
     }
 
     // Merge updated data (ensuring ID stays the same and numeric)
