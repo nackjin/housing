@@ -169,7 +169,7 @@ const HomePage = () => {
                                 <Link to="/news/video" className="text-gray-500 hover:text-primary text-sm flex items-center">더보기 <ChevronRight size={16} /></Link>
                             </div>
                             <div className="flex flex-col gap-4 flex-1">
-                                {posts.filter(p => p.category === 'video').slice(0, 2).map((item) => {
+                                {posts.filter(p => p.category === 'video').slice(0, 1).map((item) => {
                                     let videoId = '';
                                     if (item.videoUrl) {
                                         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
