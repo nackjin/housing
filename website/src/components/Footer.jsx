@@ -16,7 +16,7 @@ const Footer = () => {
                             <span className="text-xl font-bold text-gray-800">주거복지문화운동본부</span>
                         </div>
                         <div className="text-sm text-gray-600 space-y-2 leading-relaxed">
-                            <p>사무총장: 성낙진 | 사업자등록번호: 504-82-81710</p>
+                            <p>사업자등록번호: 504-82-81710</p>
                             <p>주소: 서울특별시 서초구 방배천로 2길 15, 5층</p>
                             <p>전화: <a href="tel:02-533-8910" className="hover:text-primary">02-533-8910</a> | 팩스: 02-533-6311</p>
                             <p>이메일: good@good1004.kr</p>
