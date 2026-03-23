@@ -214,7 +214,7 @@ app.post('/api/posts', upload.array('images', 10), (req, res) => {
     }
 
     if (req.files && req.files.length > 0) {
-        imageUrls = req.files.map(file => `http://localhost:${PORT}/uploads/${file.filename}`);
+        imageUrls = req.files.map(file => `/uploads/${file.filename}`);
     }
 
     // Assign ID and default values if not provided
