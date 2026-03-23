@@ -35,8 +35,8 @@ const ProjectsPage = () => {
                             key={item.id}
                             to={item.path}
                             className={`px-6 py-3 rounded-full text-sm font-bold transition-all ${location.pathname === item.path
-                                    ? 'bg-primary text-white shadow-md'
-                                    : 'bg-white text-gray-500 hover:bg-gray-100'
+                                ? 'bg-primary text-white shadow-md'
+                                : 'bg-white text-gray-500 hover:bg-gray-100'
                                 }`}
                         >
                             {item.name}
@@ -53,7 +53,7 @@ const ProjectsPage = () => {
                     <Routes>
                         <Route path="awards" element={<Awards />} />
                         <Route path="disability-awareness" element={<DisabilityAwareness />} />
-                        <Route path="*" element={<Navigate to="disability-awareness" replace />} />
+                        <Route path="*" element={<Navigate to="awards" replace />} />
                     </Routes>
                 </div>
             </div>
