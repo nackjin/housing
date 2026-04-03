@@ -62,7 +62,7 @@ const HomePage = () => {
                                 <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">주요사업</div>
                             </div>
                             <div className="p-8">
-                                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">대한민국 주거복지문화대상</h3>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">대한민국주거복지문화대상</h3>
                                 <p className="text-gray-600 mb-6 line-clamp-2">
                                     주거복지 향상을 위해 노력한 단체와 개인을 발굴하여 포상하고 우수사례를 전파합니다.
                                 </p>
