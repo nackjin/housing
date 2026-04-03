@@ -106,7 +106,7 @@ const Awards = () => {
                             홈페이지(www.good1004.kr) &gt; 주요사업 &gt; 공고문/양식 다운로드 후 <strong>메일 접수</strong>
                         </p>
                         <p className="text-red-500 text-sm font-medium">※ 2023~25년에 종합대상 수상자는 접수가 제한됩니다.</p>
-                <a href="/pdfs/announcement.hwp" download className="text-primary underline">공고문 다운로드</a>
+                <a href="/pdfs/announcement.hwp" download className="inline-block mt-4 mb-2 bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-lg shadow-md transition-colors text-lg">📄 공고문 다운로드 (.hwp)</a>
                         <p className="text-primary text-sm font-medium mt-1">※ 한글문서로 파일명은 "기관·단체·개인 명"으로 작성 (ex. 대회신청서_서울시.hwp)</p>
                     </div>
 
