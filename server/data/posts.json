@@ -1,5 +1,41 @@
 [
   {
+    "category": "video",
+    "title": "제7회 대한민국주거복지문화대상 우수사례 발표회 및 시상식 스케치 영상",
+    "author": "관리자",
+    "content": "제7회 대한민국주거복지문화대상 우수사례 발표회 및 시상식 현장 스케치 영상입니다.",
+    "videoUrl": "https://www.youtube.com/watch?v=wbNjgptjvwg",
+    "id": 5,
+    "date": "2026-04-14",
+    "views": 201,
+    "images": [],
+    "image": ""
+  },
+  {
+    "category": "video",
+    "title": "제7회 대한민국주거복지문화대상 우수사례 수상자 소감",
+    "author": "관리자",
+    "content": "제7회 대한민국주거복지문화대상 우수사례 수상자 소감 영상입니다.",
+    "videoUrl": "https://www.youtube.com/watch?v=i_J_aajh6ec",
+    "id": 4,
+    "date": "2026-04-14",
+    "views": 252,
+    "images": [],
+    "image": ""
+  },
+  {
+    "category": "video",
+    "title": "제8회 대한민국주거복지문화대상 환영사(안현자 상임대표)",
+    "author": "관리자",
+    "content": "제8회 대한민국주거복지문화대상 환영사 영상입니다.",
+    "videoUrl": "https://www.youtube.com/watch?v=6WripmrqrqI",
+    "id": 3,
+    "date": "2026-04-14",
+    "views": 212,
+    "images": [],
+    "image": ""
+  },
+  {
     "category": "notice",
     "title": "대한민국주거복지문화대상 우수사례 모집",
     "author": "관리자",
