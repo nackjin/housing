@@ -99,9 +99,21 @@ const defaultData = [
     }
 ];
 
-if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(defaultData, null, 2));
+// Ensure posts.json exists and contains required categories
+function ensureDataIntegrity() {
+    if (!fs.existsSync(DATA_FILE)) {
+        fs.writeFileSync(DATA_FILE, JSON.stringify(defaultData, null, 2));
+        return;
+    }
+    const current = readData();
+    if (!Array.isArray(current)) {
+        console.warn('⚠️ posts.json 손상 감지 – 기본 데이터로 복구합니다.');
+        fs.writeFileSync(DATA_FILE, JSON.stringify(defaultData, null, 2));
+    }
 }
+ensureDataIntegrity();
+
+
 
 if (!fs.existsSync(USERS_FILE)) {
     // Default admin user
@@ -127,7 +139,7 @@ if (!fs.existsSync(DONATIONS_FILE)) {
 }
 
 // Helper to read data
-const readData = () => {
+function readData() {
     try {
         const data = fs.readFileSync(DATA_FILE, 'utf8');
         return JSON.parse(data);

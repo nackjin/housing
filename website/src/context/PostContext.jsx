@@ -124,8 +124,9 @@ export const PostProvider = ({ children }) => {
     // Initialize state from localStorage or use default
     // We check if the saved data is valid and has length. If not, we fallback to defaultPosts.
     const [posts, setPosts] = useState([]);
-    const API_BASE_URL = 'https://housing-fcu7.onrender.com/api/posts';
-    const BACKEND_URL = 'https://housing-fcu7.onrender.com';
+    const isDev = import.meta.env.DEV;
+    const BACKEND_URL = isDev ? 'http://localhost:3002' : 'https://housing-fcu7.onrender.com';
+    const API_BASE_URL = `${BACKEND_URL}/api/posts`;
 
     // Helper to fix image URLs from localhost to production
     const fixPostUrls = (post) => {
