@@ -1,10 +1,27 @@
-﻿import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const PostContext = createContext();
 
 export const usePosts = () => useContext(PostContext);
 
 export const PostProvider = ({ children }) => {
+    const [apiError, setApiError] = useState(false);
+    // Load posts from localStorage if available
+    const loadFromLocalStorage = () => {
+        try {
+            const stored = localStorage.getItem('posts');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    setPosts(parsed);
+                    return true;
+                }
+            }
+        } catch (e) {
+            console.error('Failed to parse posts from localStorage', e);
+        }
+        return false;
+    };
     // Mock Data (Default) - This ensures data is always available if localStorage is empty
     const defaultPosts = [
         // 공지사항 Data
@@ -128,24 +145,37 @@ export const PostProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await fetch(API_BASE_URL);
-                if (response.ok) {
-                    const data = await response.json();
-                    setPosts(data.map(fixPostUrls));
-                } else {
-                    console.error('Failed to fetch posts from API');
-                    setPosts(defaultPosts); // Fallback
+        // Try loading from localStorage first
+        const loaded = loadFromLocalStorage();
+        if (!loaded) {
+            const fetchPosts = async () => {
+                try {
+                    const response = await fetch(API_BASE_URL);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const fixed = data.map(fixPostUrls);
+                        setPosts(fixed);
+                        localStorage.setItem('posts', JSON.stringify(fixed));
+                        setApiError(false);
+                    } else {
+                        console.error('Failed to fetch posts from API');
+                        setPosts(defaultPosts);
+                        setApiError(true);
+                    }
+                } catch (error) {
+                    console.error('API is not running, falling back to default data:', error);
+                    setPosts(defaultPosts);
+                    setApiError(true);
                 }
-            } catch (error) {
-                console.error('API is not running, falling back to default data:', error);
-                setPosts(defaultPosts);
-            }
-        };
-
-        fetchPosts();
+            };
+            fetchPosts();
+        } else {
+            setApiError(false);
+        }
     }, []);
+
+    // Helper to generate a random view count for video posts (200~300)
+    const getRandomViews = () => Math.floor(Math.random() * 101) + 200;
 
     const addPost = async (post) => {
         const isFormData = post instanceof FormData;
@@ -154,9 +184,18 @@ export const PostProvider = ({ children }) => {
         let headers = {};
 
         if (isFormData) {
+            // If using FormData, ensure a views field is added for video category
+            if (post.get('category') === 'video' && !post.has('views')) {
+                post.append('views', getRandomViews().toString());
+            }
             body = post;
         } else {
-            const newPostData = { ...post, views: 0 }; // Server assigns ID and Date
+            // For plain JSON posts, set views = 0 by default, but override for video posts
+            const basePost = { ...post, views: 0 };
+            if (post.category === 'video') {
+                basePost.views = getRandomViews();
+            }
+            const newPostData = basePost; // Server assigns ID and Date
             body = JSON.stringify(newPostData);
             headers['Content-Type'] = 'application/json';
         }
@@ -171,7 +210,11 @@ export const PostProvider = ({ children }) => {
             if (response.ok) {
                 const createdPost = await response.json();
                 console.log('Successfully added to local server:', createdPost);
-                setPosts((prevPosts) => [fixPostUrls(createdPost), ...prevPosts]);
+                setPosts((prevPosts) => {
+                    const updated = [fixPostUrls(createdPost), ...prevPosts];
+                    localStorage.setItem('posts', JSON.stringify(updated));
+                    return updated;
+                });
             } else {
                 console.error('Failed to add post via API');
             }
@@ -187,7 +230,11 @@ export const PostProvider = ({ children }) => {
             });
 
             if (response.ok) {
-                setPosts(prevPosts => prevPosts.filter(p => p.id !== id));
+                setPosts(prevPosts => {
+                    const updated = prevPosts.filter(p => p.id !== id);
+                    localStorage.setItem('posts', JSON.stringify(updated));
+                    return updated;
+                });
             } else {
                 console.error('Failed to delete post via API');
             }
@@ -217,9 +264,11 @@ export const PostProvider = ({ children }) => {
 
             if (response.ok) {
                 const result = await response.json();
-                setPosts(prevPosts =>
-                    prevPosts.map(p => p.id === id ? fixPostUrls(result) : p)
-                );
+                setPosts(prevPosts => {
+                    const updated = prevPosts.map(p => p.id === id ? fixPostUrls(result) : p);
+                    localStorage.setItem('posts', JSON.stringify(updated));
+                    return updated;
+                });
             } else {
                 console.error('Failed to update post via API');
             }
@@ -234,7 +283,7 @@ export const PostProvider = ({ children }) => {
     };
 
     return (
-        <PostContext.Provider value={{ posts, addPost, deletePost, editPost, resetData }}>
+        <PostContext.Provider value={{ posts, addPost, deletePost, editPost, resetData, apiError }}>
             {children}
         </PostContext.Provider>
     );

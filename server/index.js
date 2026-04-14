@@ -217,12 +217,16 @@ app.post('/api/posts', upload.array('images', 10), (req, res) => {
         imageUrls = req.files.map(file => `/uploads/${file.filename}`);
     }
 
+    // Helper to generate random views for video posts (200-300)
+    const getRandomViews = () => Math.floor(Math.random() * 101) + 200;
+
     // Assign ID and default values if not provided
     const postToAdd = {
         ...newPost,
         id: nextId,
         date: newPost.date || new Date().toISOString().split('T')[0],
-        views: parseInt(newPost.views) || 0,
+        // If videoUrl present and views not supplied, generate random views (200‑300)
+        views: (newPost.videoUrl && !newPost.views) ? getRandomViews() : (parseInt(newPost.views) || 0),
         images: imageUrls,
         image: imageUrls.length > 0 ? imageUrls[0] : '' // Retain for backward compatibility/thumbnail
     };
