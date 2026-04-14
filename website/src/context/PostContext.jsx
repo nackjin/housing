@@ -146,33 +146,28 @@ export const PostProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        // Try loading from localStorage first
-        const loaded = loadFromLocalStorage();
-        if (!loaded) {
-            const fetchPosts = async () => {
-                try {
-                    const response = await fetch(API_BASE_URL);
-                    if (response.ok) {
-                        const data = await response.json();
-                        const fixed = data.map(fixPostUrls);
-                        setPosts(fixed);
-                        localStorage.setItem('posts', JSON.stringify(fixed));
-                        setApiError(false);
-                    } else {
-                        console.error('Failed to fetch posts from API');
-                        setPosts(defaultPosts);
-                        setApiError(true);
-                    }
-                } catch (error) {
-                    console.error('API is not running, falling back to default data:', error);
-                    setPosts(defaultPosts);
+        // Load from localStorage for instant render, but ALWAYS fetch fresh data from API
+        loadFromLocalStorage();
+        
+        const fetchPosts = async () => {
+            try {
+                const response = await fetch(API_BASE_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    const fixed = data.map(fixPostUrls);
+                    setPosts(fixed);
+                    localStorage.setItem('posts', JSON.stringify(fixed));
+                    setApiError(false);
+                } else {
+                    console.error('Failed to fetch posts from API');
                     setApiError(true);
                 }
-            };
-            fetchPosts();
-        } else {
-            setApiError(false);
-        }
+            } catch (error) {
+                console.error('API is not running:', error);
+                setApiError(true);
+            }
+        };
+        fetchPosts();
     }, []);
 
     // Helper to generate a random view count for video posts (200~300)
