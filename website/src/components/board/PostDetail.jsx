@@ -142,7 +142,7 @@ const PostDetail = () => {
                     목록으로
                 </button>
 
-                {isAdmin && (
+                {isAdmin && import.meta.env.DEV && (
                     <div className="flex gap-2">
                         <button
                             onClick={() => navigate(`/admin/write?edit=${post.id}`)}

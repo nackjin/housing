@@ -104,7 +104,7 @@ const NewsPage = () => {
                         <h2 className="text-2xl font-bold text-gray-900">
                             {currentCategory.label}
                         </h2>
-                        {isAdmin && (
+                        {isAdmin && import.meta.env.DEV && (
                             <button
                                 onClick={() => navigate(`/admin/write?category=${currentCategory.id}`)}
                                 className="bg-primary hover:bg-primary-dark text-white px-5 py-2 rounded-lg font-medium transition-colors shadow-sm text-sm"

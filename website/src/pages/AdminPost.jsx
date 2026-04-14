@@ -11,6 +11,17 @@ const AdminPost = () => {
 
     const initialCategory = searchParams.get('category') || 'notice';
 
+    if (import.meta.env.PROD) {
+        return (
+            <div className="py-20 text-center container mx-auto px-4">
+                <h1 className="text-3xl font-bold text-red-600 mb-4">접근 금지 (로컬 보호 모드)</h1>
+                <p className="text-gray-700 mb-4 font-medium">안전한 데이터 저장을 위해 인터넷 사이트에서는 글을 작성할 수 없습니다.</p>
+                <p className="text-gray-600 mb-8 max-w-lg mx-auto">바탕화면의 파워쉘(npm run dev)을 켜시고,<br/>내 컴퓨터 백업 관리자 주소(<a href="http://localhost:5173/admin/write" className="text-primary underline">http://localhost:5173/admin/write</a>)를 통해 안전하게 글을 작성해 주세요.<br/><br/>작성 후 <b>[GitHub 업로드]</b> 아이콘을 더블클릭 하시면 세상에 공개됩니다!</p>
+                <button onClick={() => navigate(-1)} className="bg-primary text-white px-6 py-2 rounded-lg font-medium">이전 페이지로 돌아가기</button>
+            </div>
+        );
+    }
+
     // Default to URL param or 'notice' to ensure a valid initial state
     const [formData, setFormData] = useState({
         category: initialCategory,
@@ -107,6 +118,10 @@ const AdminPost = () => {
 
         // Navigate to the correct category page to see the new post
         navigate(`/news/${formData.category}`);
+        // Force a full reload so the new video (with videoUrl) is guaranteed to be fetched
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
     };
 
     return (
