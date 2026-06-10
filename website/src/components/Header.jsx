@@ -69,7 +69,7 @@ const Header = () => {
                     {user && (
                         <Link to="/mypage" className="hover:text-primary transition-colors">마이페이지</Link>
                     )}
-                    {isAdmin && import.meta.env.DEV && (
+                    {isAdmin && (
                         <Link to="/admin" className="hover:text-primary transition-colors">관리자 모드</Link>
                     )}
                 </div>
