@@ -98,7 +98,7 @@ const AdminPost = () => {
 
         // Add post
         if (editId) {
-            editPost(Number(editId), submitData);
+            editPost(editId, submitData);
             alert('게시물이 수정되었습니다.');
         } else {
             addPost(submitData);
