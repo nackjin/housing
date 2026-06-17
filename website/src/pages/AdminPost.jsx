@@ -63,7 +63,7 @@ const AdminPost = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         console.log('Form Data before Submit:', formData);
@@ -98,10 +98,10 @@ const AdminPost = () => {
 
         // Add post
         if (editId) {
-            editPost(editId, submitData);
+            await editPost(editId, submitData);
             alert('게시물이 수정되었습니다.');
         } else {
-            addPost(submitData);
+            await addPost(submitData);
             alert('게시물이 등록되었습니다.');
         }
 
