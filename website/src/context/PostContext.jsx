@@ -15,12 +15,23 @@ export const PostProvider = ({ children }) => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const q = query(collection(db, 'posts'), orderBy('date', 'desc'));
-                const querySnapshot = await getDocs(q);
+                // Fetch all posts without orderBy to avoid index issues with missing createdAt fields
+                const querySnapshot = await getDocs(collection(db, 'posts'));
                 const postsData = querySnapshot.docs.map(doc => ({
                     id: doc.id,
                     ...doc.data()
                 }));
+                
+                // Sort by date descending, then by createdAt descending
+                postsData.sort((a, b) => {
+                    if (a.date !== b.date) {
+                        return new Date(b.date) - new Date(a.date);
+                    }
+                    const timeA = a.createdAt || 0;
+                    const timeB = b.createdAt || 0;
+                    return timeB - timeA;
+                });
+                
                 setPosts(postsData);
                 setApiError(false);
             } catch (error) {
@@ -72,6 +83,7 @@ export const PostProvider = ({ children }) => {
 
         // Default fields
         finalData.date = new Date().toISOString().split('T')[0];
+        finalData.createdAt = Date.now();
         finalData.views = finalData.category === 'video' && !finalData.views ? getRandomViews() : (parseInt(finalData.views) || 0);
         
         try {
