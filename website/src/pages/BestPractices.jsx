@@ -293,11 +293,6 @@ const BestPractices = () => {
 
     const currentData = data[selectedYear]?.[activeTab] || [];
 
-    const handleDownload = () => {
-        // In a real app, this would trigger the actual PDF download
-        alert('PDF 다운로드를 시작합니다.');
-    };
-
     return (
         <div className="py-20 bg-gray-50 min-h-[60vh]">
             <div className="container mx-auto px-4">
@@ -323,13 +318,14 @@ const BestPractices = () => {
                         </select>
                     </div>
 
-                    <button
-                        onClick={handleDownload}
+                    <a
+                        href="/pdfs/2025_casebook.pdf"
+                        download="2025_주거복지우수사례집.pdf"
                         className="flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors"
                     >
                         <Download size={20} />
                         <span>우수사례집 PDF 다운로드</span>
-                    </button>
+                    </a>
                 </div>
 
                 {/* Main Content Area */}
