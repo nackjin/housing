@@ -5,6 +5,7 @@ import AboutPage from './pages/AboutPage'
 import MyPage from './pages/MyPage'
 import NewsPage from './pages/NewsPage'
 import AdminPost from './pages/AdminPost'
+import AdminAwards from './pages/AdminAwards'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import SocialContributionPage from './pages/SocialContributionPage'
@@ -32,6 +33,7 @@ function App() {
 
                 {/* Admin Routes */}
                 <Route path="admin/write" element={<AdminPost />} />
+                <Route path="admin/awards" element={<AdminAwards />} />
                 <Route path="admin/*" element={<AboutPage />} />
             </Route>
         </Routes>

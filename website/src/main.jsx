@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { MenuProvider } from './context/MenuContext'
 import { PostProvider } from './context/PostContext'
 import { AuthProvider } from './context/AuthContext'
+import { AwardsProvider } from './context/AwardsContext'
 import ErrorBoundary from './components/ErrorBoundary'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -14,9 +15,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <MenuProvider>
                 <AuthProvider>
                     <PostProvider>
-                        <BrowserRouter>
-                            <App />
-                        </BrowserRouter>
+                        <AwardsProvider>
+                            <BrowserRouter>
+                                <App />
+                            </BrowserRouter>
+                        </AwardsProvider>
                     </PostProvider>
                 </AuthProvider>
             </MenuProvider>
