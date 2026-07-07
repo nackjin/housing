@@ -51,7 +51,7 @@ const Awards = () => {
                             </div>
                             <div className="sm:w-3/4 p-4 text-gray-700">
                                 <span className="mr-4"><strong>주최:</strong> 주거복지문화운동본부</span>
-                                <span><strong>후원:</strong> 국토교통부</span>
+                                <span><strong>후원:</strong> 행정안전부ㆍ국토교통부</span>
                             </div>
                         </li>
                         <li className="flex flex-col sm:flex-row">
@@ -71,7 +71,7 @@ const Awards = () => {
                                 대회 기간
                             </div>
                             <div className="sm:w-3/4 p-4 text-gray-700">
-                                <strong>접수:</strong> 4월 1일 ~ 6월 30일 <span className="mx-2">|</span> <strong>발표:</strong> 9월 25일 (예정)
+                                <strong>접수:</strong> 4월 1일 ~ 7월 22일 <span className="text-red-500 text-xs font-bold ml-1">(마감연장)</span> <span className="mx-2">|</span> <strong>발표:</strong> 9월 25일 (예정)
                             </div>
                         </li>
                         <li className="flex flex-col sm:flex-row">
