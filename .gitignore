@@ -5,3 +5,5 @@ dist/
 *.log
 
 server/uploads/
+server/data/users.json
+server/data/donations.json
