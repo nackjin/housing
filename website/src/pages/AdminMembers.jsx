@@ -5,7 +5,7 @@ import { ChevronLeft, Users, Mail, Phone, MapPin, Briefcase, Clock, Shield } fro
 
 const AdminMembers = () => {
     const navigate = useNavigate();
-    const { isAdmin } = useAuth();
+    const { user, isAdmin } = useAuth();
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -18,7 +18,9 @@ const AdminMembers = () => {
 
         const fetchMembers = async () => {
             try {
-                const response = await fetch('https://housing-fcu7.onrender.com/api/users');
+                const response = await fetch('https://housing-fcu7.onrender.com/api/users', {
+                    headers: { 'Authorization': `Bearer ${user?.token}` }
+                });
                 if (response.ok) {
                     const data = await response.json();
                     setMembers(data);
@@ -31,7 +33,7 @@ const AdminMembers = () => {
         };
 
         fetchMembers();
-    }, [isAdmin, navigate]);
+    }, [isAdmin, navigate, user]);
 
     if (loading) {
         return <div className="min-h-[60vh] flex items-center justify-center text-gray-500">회원 정보를 불러오는 중...</div>;

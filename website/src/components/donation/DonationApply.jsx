@@ -62,7 +62,7 @@ const DonationApply = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:3001/api/donations', {
+            const response = await fetch('https://housing-fcu7.onrender.com/api/donations', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(donationData)

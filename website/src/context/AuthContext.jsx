@@ -40,14 +40,20 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await fetch(`https://housing-fcu7.onrender.com/api/users/${userId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user?.token}`
+                },
                 body: JSON.stringify(updateData)
             });
 
             if (response.ok) {
                 const updatedUser = await response.json();
-                setUser(updatedUser);
-                localStorage.setItem('user', JSON.stringify(updatedUser));
+                // The PUT response doesn't carry a token, so keep the
+                // existing session token from login.
+                const mergedUser = { ...updatedUser, token: user?.token };
+                setUser(mergedUser);
+                localStorage.setItem('user', JSON.stringify(mergedUser));
                 return true;
             }
             return false;

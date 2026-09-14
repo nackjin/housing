@@ -20,7 +20,9 @@ const MyPage = () => {
     useEffect(() => {
         const fetchDonations = async () => {
             try {
-                const response = await fetch('https://housing-fcu7.onrender.com/api/donations');
+                const response = await fetch('https://housing-fcu7.onrender.com/api/donations', {
+                    headers: { 'Authorization': `Bearer ${user?.token}` }
+                });
                 if (response.ok) {
                     const allDonations = await response.json();
                     if (user && user.role === 'admin') {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
 import { usePosts } from '../context/PostContext';
+import { useAuth } from '../context/AuthContext';
 import { ChevronLeft } from 'lucide-react';
 
 const AdminPost = () => {
@@ -8,6 +9,7 @@ const AdminPost = () => {
     const [searchParams] = useSearchParams();
     const editId = searchParams.get('edit');
     const { addPost, editPost, posts } = usePosts();
+    const { isAdmin } = useAuth();
 
     const initialCategory = searchParams.get('category') || 'notice';
 
@@ -40,6 +42,10 @@ const AdminPost = () => {
             }
         }
     }, [editId, posts]);
+
+    if (!isAdmin) {
+        return <Navigate to="/login" replace />;
+    }
 
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;

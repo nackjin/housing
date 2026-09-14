@@ -3,9 +3,48 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = 3002;
+
+// In-memory session store: token -> { id, role }
+// Resets on server restart, so users just log in again; there is no
+// persistent secret to leak from this.
+const sessions = new Map();
+
+function getSession(req) {
+    const header = req.headers.authorization || '';
+    const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+    return token ? sessions.get(token) : null;
+}
+
+function requireAuth(req, res, next) {
+    const session = getSession(req);
+    if (!session) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    req.session = session;
+    next();
+}
+
+function requireAdmin(req, res, next) {
+    const session = getSession(req);
+    if (!session || session.role !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden' });
+    }
+    req.session = session;
+    next();
+}
+
+function requireSelfOrAdmin(req, res, next) {
+    const session = getSession(req);
+    if (!session || (session.role !== 'admin' && session.id !== Number(req.params.id))) {
+        return res.status(403).json({ error: 'Forbidden' });
+    }
+    req.session = session;
+    next();
+}
 
 // Middleware
 app.use(cors());
@@ -204,7 +243,7 @@ app.get('/api/posts', (req, res) => {
 });
 
 // 2. Add a new post
-app.post('/api/posts', upload.array('images', 10), (req, res) => {
+app.post('/api/posts', requireAdmin, upload.array('images', 10), (req, res) => {
     const newPost = req.body;
 
     // Validate
@@ -254,7 +293,7 @@ app.post('/api/posts', upload.array('images', 10), (req, res) => {
 });
 
 // 3. Update an existing post
-app.put('/api/posts/:id', upload.array('images', 10), (req, res) => {
+app.put('/api/posts/:id', requireAdmin, upload.array('images', 10), (req, res) => {
     const postId = Number(req.params.id);
     const updatedData = req.body;
     const posts = readData();
@@ -303,7 +342,7 @@ app.put('/api/posts/:id', upload.array('images', 10), (req, res) => {
 });
 
 // 4. Delete a post
-app.delete('/api/posts/:id', (req, res) => {
+app.delete('/api/posts/:id', requireAdmin, (req, res) => {
     const postId = Number(req.params.id);
     let posts = readData();
 
@@ -322,7 +361,7 @@ app.delete('/api/posts/:id', (req, res) => {
 });
 
 // 5. Users API
-app.get('/api/users', (req, res) => {
+app.get('/api/users', requireAdmin, (req, res) => {
     // Only return non-password fields for security in a simple implementation
     const users = readUsers().map(u => {
         const { password, ...safeUser } = u;
@@ -373,13 +412,15 @@ app.post('/api/users/login', (req, res) => {
 
     if (user) {
         const { password, ...safeUser } = user;
-        res.json(safeUser);
+        const token = crypto.randomBytes(32).toString('hex');
+        sessions.set(token, { id: user.id, role: user.role });
+        res.json({ ...safeUser, token });
     } else {
         res.status(401).json({ error: 'Invalid credentials' });
     }
 });
 
-app.put('/api/users/:id', (req, res) => {
+app.put('/api/users/:id', requireSelfOrAdmin, (req, res) => {
     const userId = Number(req.params.id);
     const updatedData = req.body;
     const users = readUsers();
@@ -413,15 +454,20 @@ app.put('/api/users/:id', (req, res) => {
 });
 
 // 6. Donations API
-app.get('/api/donations', (req, res) => {
+app.get('/api/donations', requireAuth, (req, res) => {
     const donations = readDonations();
-    res.json(donations);
+    // Admins see everything; regular users only see their own donations.
+    if (req.session.role === 'admin') {
+        return res.json(donations);
+    }
+    res.json(donations.filter(d => d.userId === req.session.id));
 });
 
 app.post('/api/donations', (req, res) => {
     const newDonation = req.body;
 
-    if (!newDonation.userId || !newDonation.amount || !newDonation.type) {
+    // userId is optional: the donation form also accepts guest submissions.
+    if (!newDonation.amount || !newDonation.type) {
         return res.status(400).json({ error: 'Missing required donation fields' });
     }
 
