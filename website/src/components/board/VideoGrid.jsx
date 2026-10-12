@@ -22,8 +22,13 @@ const VideoGrid = ({ posts }) => {
 
     const [selectedVideo, setSelectedVideo] = useState(null);
     const { isAdmin } = useAuth();
-    const { deletePost } = usePosts();
+    const { deletePost, incrementView } = usePosts();
     const navigate = useNavigate();
+
+    const handleOpenVideo = (post) => {
+        setSelectedVideo(post);
+        incrementView(post.id);
+    };
 
     const handleDelete = (id) => {
         if (window.confirm('정말로 이 게시물을 삭제하시겠습니까?')) {
@@ -40,7 +45,7 @@ const VideoGrid = ({ posts }) => {
                     posts.map((post) => (
                         <div
                             key={post.id}
-                            onClick={() => setSelectedVideo(post)}
+                            onClick={() => handleOpenVideo(post)}
                             className="group cursor-pointer bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
                         >
                             <div className="relative aspect-video overflow-hidden bg-gray-900">
