@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db, storage } from '../firebase';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, increment } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const PostContext = createContext();
@@ -143,6 +143,16 @@ export const PostProvider = ({ children }) => {
         }
     };
 
+    const incrementView = async (id) => {
+        try {
+            const docRef = doc(db, 'posts', id.toString());
+            await updateDoc(docRef, { views: increment(1) });
+            setPosts(prev => prev.map(p => p.id.toString() === id.toString() ? { ...p, views: (p.views || 0) + 1 } : p));
+        } catch (error) {
+            console.error("Error incrementing views: ", error);
+        }
+    };
+
     const deletePost = async (id) => {
         try {
             await deleteDoc(doc(db, 'posts', id.toString()));
@@ -157,7 +167,7 @@ export const PostProvider = ({ children }) => {
     };
 
     return (
-        <PostContext.Provider value={{ posts, addPost, deletePost, editPost, resetData, apiError }}>
+        <PostContext.Provider value={{ posts, addPost, deletePost, editPost, incrementView, resetData, apiError }}>
             {children}
         </PostContext.Provider>
     );

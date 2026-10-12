@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePosts } from '../../context/PostContext';
 import { useAuth } from '../../context/AuthContext';
@@ -7,12 +7,20 @@ import { ChevronLeft, Calendar, User, Eye, Clock, Edit, Trash2, Link as LinkIcon
 const PostDetail = () => {
     const { category, id } = useParams();
     const navigate = useNavigate();
-    const { posts, deletePost } = usePosts();
+    const { posts, deletePost, incrementView } = usePosts();
     const { isAdmin } = useAuth();
 
     // Find the post
     // Note: id from params is a string, post.id might be a number
     const post = posts.find(p => p.id.toString() === id);
+
+    const countedRef = useRef(null);
+    useEffect(() => {
+        if (post && countedRef.current !== post.id) {
+            countedRef.current = post.id;
+            incrementView(post.id);
+        }
+    }, [post, incrementView]);
 
     if (!post) {
         return (
