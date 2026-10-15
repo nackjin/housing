@@ -36,11 +36,15 @@ const PostDetail = () => {
         );
     }
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (window.confirm('정말로 이 게시물을 삭제하시겠습니까?')) {
-            deletePost(post.id);
-            alert('게시물이 삭제되었습니다.');
-            navigate(`/news/${category}`);
+            const success = await deletePost(post.id);
+            if (success) {
+                alert('게시물이 삭제되었습니다.');
+                navigate(`/news/${category}`);
+            } else {
+                alert('게시물 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.');
+            }
         }
     };
 

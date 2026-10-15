@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db, storage } from '../firebase';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, increment } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, doc, query, orderBy, increment } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const PostContext = createContext();
@@ -17,11 +17,15 @@ export const PostProvider = ({ children }) => {
             try {
                 // Fetch all posts without orderBy to avoid index issues with missing createdAt fields
                 const querySnapshot = await getDocs(collection(db, 'posts'));
-                const postsData = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-                
+                const postsData = querySnapshot.docs
+                    .map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }))
+                    // Firestore write rules don't allow real deletes (to block mass
+                    // vandalism), so "deleting" a post just flags it and we hide it here.
+                    .filter(p => !p.deleted);
+
                 // Sort by date descending, then by createdAt descending
                 postsData.sort((a, b) => {
                     if (a.date !== b.date) {
@@ -155,10 +159,15 @@ export const PostProvider = ({ children }) => {
 
     const deletePost = async (id) => {
         try {
-            await deleteDoc(doc(db, 'posts', id.toString()));
+            // Firestore write rules block real document deletes (to stop mass
+            // vandalism from an open ruleset), so mark the post deleted instead;
+            // fetchPosts filters these out.
+            await updateDoc(doc(db, 'posts', id.toString()), { deleted: true });
             setPosts(prev => prev.filter(p => p.id.toString() !== id.toString()));
+            return true;
         } catch (error) {
             console.error("Error deleting document: ", error);
+            return false;
         }
     };
 

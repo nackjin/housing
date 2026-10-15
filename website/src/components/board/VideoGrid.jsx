@@ -30,11 +30,15 @@ const VideoGrid = ({ posts }) => {
         incrementView(post.id);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm('정말로 이 게시물을 삭제하시겠습니까?')) {
-            deletePost(id);
-            setSelectedVideo(null);
-            alert('게시물이 삭제되었습니다.');
+            const success = await deletePost(id);
+            if (success) {
+                setSelectedVideo(null);
+                alert('게시물이 삭제되었습니다.');
+            } else {
+                alert('게시물 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.');
+            }
         }
     };
 
