@@ -5,6 +5,20 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const PostContext = createContext();
 
+// Turn Firebase error codes into a short Korean reason for the admin.
+const describeFirebaseError = (error) => {
+    const code = error?.code || '';
+    const reasons = {
+        'storage/unauthorized': '파일 업로드 권한이 없습니다',
+        'storage/quota-exceeded': '저장 공간 한도를 초과했습니다',
+        'storage/retry-limit-exceeded': '네트워크가 불안정해 업로드가 중단되었습니다',
+        'storage/canceled': '업로드가 취소되었습니다',
+        'permission-denied': '저장 권한이 없습니다',
+        'unavailable': '서버에 연결할 수 없습니다. 네트워크를 확인해주세요',
+    };
+    return reasons[code] || code || error?.message || '알 수 없는 오류';
+};
+
 export const usePosts = () => useContext(PostContext);
 
 export const PostProvider = ({ children }) => {
@@ -48,6 +62,19 @@ export const PostProvider = ({ children }) => {
 
     const getRandomViews = () => Math.floor(Math.random() * 101) + 200;
 
+    // addPost/editPost throw on failure (upload or Firestore write) so the
+    // caller can tell the admin instead of falsely reporting success.
+    const uploadPostFile = async (file) => {
+        try {
+            const storageRef = ref(storage, `posts/${Date.now()}_${file.name}`);
+            await uploadBytes(storageRef, file);
+            return await getDownloadURL(storageRef);
+        } catch (error) {
+            console.error("Error uploading file: ", file.name, error);
+            throw new Error(`파일 "${file.name}" 업로드에 실패했습니다. (${describeFirebaseError(error)})`);
+        }
+    };
+
     const addPost = async (postData) => {
         const isFormData = postData instanceof FormData;
         
@@ -66,10 +93,7 @@ export const PostProvider = ({ children }) => {
             const imageUrls = [];
             
             for (const file of imageFiles) {
-                const storageRef = ref(storage, `posts/${Date.now()}_${file.name}`);
-                await uploadBytes(storageRef, file);
-                const url = await getDownloadURL(storageRef);
-                imageUrls.push(url);
+                imageUrls.push(await uploadPostFile(file));
             }
             
             const existingImagesStr = postData.get('existingImages');
@@ -96,6 +120,7 @@ export const PostProvider = ({ children }) => {
             setPosts(prev => [newPost, ...prev]);
         } catch (error) {
             console.error("Error adding document: ", error);
+            throw new Error(`게시물 저장에 실패했습니다. (${describeFirebaseError(error)})`);
         }
     };
 
@@ -114,10 +139,7 @@ export const PostProvider = ({ children }) => {
             const imageUrls = [];
             
             for (const file of imageFiles) {
-                const storageRef = ref(storage, `posts/${Date.now()}_${file.name}`);
-                await uploadBytes(storageRef, file);
-                const url = await getDownloadURL(storageRef);
-                imageUrls.push(url);
+                imageUrls.push(await uploadPostFile(file));
             }
             
             const existingImagesStr = updatedPost.get('existingImages');
@@ -144,6 +166,7 @@ export const PostProvider = ({ children }) => {
             setPosts(prev => prev.map(p => p.id.toString() === id.toString() ? { ...p, ...finalData } : p));
         } catch (error) {
             console.error("Error updating document: ", error);
+            throw new Error(`게시물 수정 저장에 실패했습니다. (${describeFirebaseError(error)})`);
         }
     };
 

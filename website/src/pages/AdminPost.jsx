@@ -25,6 +25,7 @@ const AdminPost = () => {
         imageFiles: [],
         videoUrl: ''
     });
+    const [submitting, setSubmitting] = useState(false);
 
     React.useEffect(() => {
         if (editId) {
@@ -103,13 +104,20 @@ const AdminPost = () => {
             delete submitData.image;
         }
 
-        // Add post
-        if (editId) {
-            await editPost(editId, submitData);
-            alert('게시물이 수정되었습니다.');
-        } else {
-            await addPost(submitData);
-            alert('게시물이 등록되었습니다.');
+        // Add post — addPost/editPost throw if an upload or the save fails
+        setSubmitting(true);
+        try {
+            if (editId) {
+                await editPost(editId, submitData);
+                alert('게시물이 수정되었습니다.');
+            } else {
+                await addPost(submitData);
+                alert('게시물이 등록되었습니다.');
+            }
+        } catch (error) {
+            alert(`${error.message}\n\n작성한 내용은 그대로 남아 있으니 다시 시도해주세요.`);
+            setSubmitting(false);
+            return;
         }
 
         // Navigate to the correct category page to see the new post
@@ -258,9 +266,10 @@ const AdminPost = () => {
                             </button>
                             <button
                                 type="submit"
-                                className="px-8 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors font-medium shadow-sm hover:shadow-md"
+                                disabled={submitting}
+                                className="px-8 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors font-medium shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
                             >
-                                {editId ? '수정하기' : '등록하기'}
+                                {submitting ? '저장 중...' : (editId ? '수정하기' : '등록하기')}
                             </button>
                         </div>
                     </form>
