@@ -3,6 +3,7 @@ import { Play, Edit, Trash2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { usePosts } from '../../context/PostContext';
 import { useNavigate } from 'react-router-dom';
+import CommentSection from './CommentSection';
 
 const VideoGrid = ({ posts }) => {
     // Helper to extract YouTube thumbnail
@@ -94,8 +95,9 @@ const VideoGrid = ({ posts }) => {
 
             {/* Video Modal */}
             {selectedVideo && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedVideo(null)}>
-                    <div className="w-full max-w-4xl bg-black rounded-lg overflow-hidden shadow-2xl relative" onClick={e => e.stopPropagation()}>
+                <div className="fixed inset-0 z-50 flex overflow-y-auto p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedVideo(null)}>
+                    {/* m-auto centers when short and scrolls (instead of clipping the top) once comments make it tall */}
+                    <div className="m-auto w-full max-w-4xl bg-black rounded-lg overflow-hidden shadow-2xl relative" onClick={e => e.stopPropagation()}>
                         <div className="aspect-video">
                             {selectedVideo.videoUrl ? (
                                 <iframe
@@ -143,6 +145,10 @@ const VideoGrid = ({ posts }) => {
                                     </button>
                                 </div>
                             )}
+
+                            <div className="pt-4 mt-4 border-t border-gray-100">
+                                <CommentSection postId={selectedVideo.id} />
+                            </div>
                         </div>
                     </div>
                 </div>

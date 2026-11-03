@@ -4,6 +4,7 @@ import { usePosts } from '../../context/PostContext';
 import { useAuth } from '../../context/AuthContext';
 import { ChevronLeft, Calendar, User, Eye, Clock, Edit, Trash2, Link as LinkIcon, FileText } from 'lucide-react';
 import { isImageUrl, getFileNameFromUrl } from '../../utils/fileHelpers';
+import CommentSection from './CommentSection';
 
 const PostDetail = () => {
     const { category, id } = useParams();
@@ -170,6 +171,11 @@ const PostDetail = () => {
                 <div className="prose max-w-none text-gray-800 whitespace-pre-line leading-relaxed min-h-[200px]">
                     {post.content}
                 </div>
+            </div>
+
+            {/* Comments */}
+            <div className="px-8 py-6 border-t border-gray-100">
+                <CommentSection postId={post.id} />
             </div>
 
             {/* Footer / Navigation */}
