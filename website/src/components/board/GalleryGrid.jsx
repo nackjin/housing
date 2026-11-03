@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { isImageUrl } from '../../utils/fileHelpers';
 
 const GalleryGrid = ({ posts }) => {
     return (
@@ -8,7 +9,7 @@ const GalleryGrid = ({ posts }) => {
                 posts.map((post) => (
                     <Link key={post.id} to={`/news/${post.category}/${post.id}`} className="group block bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
                         <div className="relative aspect-video overflow-hidden bg-gray-100">
-                            {post.image ? (
+                            {post.image && isImageUrl(post.image) ? (
                                 <img
                                     src={post.image}
                                     alt={post.title}

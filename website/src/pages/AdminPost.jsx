@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useSearchParams, Navigate } from 'react-router-dom';
 import { usePosts } from '../context/PostContext';
 import { useAuth } from '../context/AuthContext';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, FileText } from 'lucide-react';
+import { isImageUrl, getFileNameFromUrl } from '../utils/fileHelpers';
 
 const AdminPost = () => {
     const navigate = useNavigate();
@@ -184,26 +185,32 @@ const AdminPost = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    이미지 첨부 (다중 선택 가능) <span className="text-gray-400 font-normal">(선택)</span>
+                                    파일 첨부 (이미지, PDF 등 다중 선택 가능) <span className="text-gray-400 font-normal">(선택)</span>
                                 </label>
                                 <input
                                     type="file"
                                     multiple
-                                    accept={formData.category === 'video' ? "image/*,video/*" : "image/*"}
                                     onChange={handleChange}
                                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                                 />
                                 {formData.existingImages && formData.existingImages.length > 0 && editId && (
                                     <div className="mt-3 flex flex-wrap gap-2">
-                                        <p className="w-full text-sm text-gray-500 mb-1">현재 포함된 이미지 (삭제하려면 X 버튼 클릭):</p>
+                                        <p className="w-full text-sm text-gray-500 mb-1">현재 포함된 파일 (삭제하려면 X 버튼 클릭):</p>
                                         {formData.existingImages.map((img, idx) => (
                                             <div key={idx} className="relative group border rounded-md overflow-hidden bg-gray-100">
-                                                <img src={img} alt={`기존 업로드 사진 ${idx}`} className="w-20 h-20 object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
+                                                {isImageUrl(img) ? (
+                                                    <img src={img} alt={`기존 업로드 파일 ${idx}`} className="w-20 h-20 object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
+                                                ) : (
+                                                    <div className="w-20 h-20 flex flex-col items-center justify-center gap-1 text-gray-500 px-1">
+                                                        <FileText size={20} />
+                                                        <span className="text-[10px] text-center line-clamp-2 break-all">{getFileNameFromUrl(img)}</span>
+                                                    </div>
+                                                )}
                                                 <button
                                                     type="button"
                                                     onClick={() => handleDeleteExistingImage(idx)}
                                                     className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs hover:bg-red-600 shadow-md transition-colors"
-                                                    title="이미지 삭제"
+                                                    title="파일 삭제"
                                                 >
                                                     ✕
                                                 </button>

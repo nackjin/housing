@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePosts } from '../../context/PostContext';
 import { useAuth } from '../../context/AuthContext';
-import { ChevronLeft, Calendar, User, Eye, Clock, Edit, Trash2, Link as LinkIcon } from 'lucide-react';
+import { ChevronLeft, Calendar, User, Eye, Clock, Edit, Trash2, Link as LinkIcon, FileText } from 'lucide-react';
+import { isImageUrl, getFileNameFromUrl } from '../../utils/fileHelpers';
 
 const PostDetail = () => {
     const { category, id } = useParams();
@@ -81,32 +82,59 @@ const PostDetail = () => {
                 {/* Images */}
                 {post.images && post.images.length > 0 ? (
                     <div className="mb-8 space-y-4">
-                        {post.images.map((imgUrl, index) => (
-                            <div key={index} className="rounded-lg overflow-hidden bg-gray-100 border border-gray-100">
-                                <img
-                                    src={imgUrl}
-                                    alt={`${post.title} - ${index + 1}`}
-                                    className="w-full h-auto object-contain max-h-[600px]"
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = 'https://via.placeholder.com/800x400?text=No+Image';
-                                    }}
-                                />
-                            </div>
+                        {post.images.map((fileUrl, index) => (
+                            isImageUrl(fileUrl) ? (
+                                <div key={index} className="rounded-lg overflow-hidden bg-gray-100 border border-gray-100">
+                                    <img
+                                        src={fileUrl}
+                                        alt={`${post.title} - ${index + 1}`}
+                                        className="w-full h-auto object-contain max-h-[600px]"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = 'https://via.placeholder.com/800x400?text=No+Image';
+                                        }}
+                                    />
+                                </div>
+                            ) : (
+                                <a
+                                    key={index}
+                                    href={fileUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                                >
+                                    <FileText className="text-primary shrink-0" size={24} />
+                                    <span className="text-gray-800 font-medium truncate">{getFileNameFromUrl(fileUrl)}</span>
+                                    <span className="ml-auto text-sm text-gray-400 shrink-0 whitespace-nowrap">다운로드</span>
+                                </a>
+                            )
                         ))}
                     </div>
                 ) : post.image && (
-                    <div className="mb-8 rounded-lg overflow-hidden bg-gray-100 border border-gray-100">
-                        <img
-                            src={post.image}
-                            alt={post.title}
-                            className="w-full h-auto object-contain max-h-[600px]"
-                            onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = 'https://via.placeholder.com/800x400?text=No+Image';
-                            }}
-                        />
-                    </div>
+                    isImageUrl(post.image) ? (
+                        <div className="mb-8 rounded-lg overflow-hidden bg-gray-100 border border-gray-100">
+                            <img
+                                src={post.image}
+                                alt={post.title}
+                                className="w-full h-auto object-contain max-h-[600px]"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = 'https://via.placeholder.com/800x400?text=No+Image';
+                                }}
+                            />
+                        </div>
+                    ) : (
+                        <a
+                            href={post.image}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mb-8 flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                            <FileText className="text-primary shrink-0" size={24} />
+                            <span className="text-gray-800 font-medium truncate">{getFileNameFromUrl(post.image)}</span>
+                            <span className="ml-auto text-sm text-gray-400 shrink-0 whitespace-nowrap">다운로드</span>
+                        </a>
+                    )
                 )}
 
                 {/* Video or External Link */}
